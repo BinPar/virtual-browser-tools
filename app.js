@@ -17,6 +17,7 @@ var DEFAULT_SCREENSHOT_CLIP_OPTIONS = {
 
 var getPicture = function(url, options) {
 	var res = nightmare.goto(url + '?v=' + new Date().getTime());
+	options = options || {};
 	if(options.selector) {
 		res = res.wait(options.selector);
 	} else {
