@@ -130,7 +130,7 @@ ssh root@ada.binpar.com << EOF
  fi
 
  docker rm -f $APP_NAME
- docker pull mgonand/dockerimages:node
+ docker pull mgonand/dockerimages:nodescreen
  if [ "$APP_SCRIPT_PATH" = "/bundle" ] && [ ! -z ${DATA_VOLUME_PATH+x} ]
  then
      docker run \
@@ -144,7 +144,7 @@ ssh root@ada.binpar.com << EOF
         --link=mail:mail \
         --hostname="$APP_HOSTNAME" \
         --name=$APP_NAME \
-        mgonand/dockerimages:node
+        mgonand/dockerimages:nodescreen
  elif [[ "$APP_SCRIPT_PATH" != "/bundle" ]] && [ ! -z ${DATA_VOLUME_PATH+x} ]
  then
      docker run \
@@ -159,7 +159,7 @@ ssh root@ada.binpar.com << EOF
         --hostname="$APP_HOSTNAME" \
         --env=APP_NODE_DIR=$APP_SCRIPT_PATH \
         --name=$APP_NAME \
-        mgonand/dockerimages:node
+        mgonand/dockerimages:nodescreen
  elif [[ "$APP_SCRIPT_PATH" != "/bundle" ]] && [ -z ${DATA_VOLUME_PATH+x} ]
  then
      docker run \
@@ -173,7 +173,7 @@ ssh root@ada.binpar.com << EOF
         --hostname="$APP_HOSTNAME" \
         --env=APP_NODE_DIR=$APP_SCRIPT_PATH \
         --name=$APP_NAME \
-        mgonand/dockerimages:node
+        mgonand/dockerimages:nodescreen
  else
      docker run \
         -d \
@@ -185,7 +185,7 @@ ssh root@ada.binpar.com << EOF
         --link=mail:mail \
         --hostname="$APP_HOSTNAME" \
         --name=$APP_NAME \
-        mgonand/dockerimages:node
+        mgonand/dockerimages:nodescreen
  fi
  echo "Done in server side... exit"
  exit 0
