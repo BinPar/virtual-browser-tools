@@ -62,12 +62,12 @@ app.post('/imageFromUrl', function (req, res) {
 							res.end(img);
 						}).catch(function (error) {
 							console.log('Capture failed:', error);
-							res.end('Capture failed:' + error);
+							res.status(501).end('Capture failed:' + error);
 						});
 					})
 					.catch((err) => {
 						console.log('ERR: ', err);
-						res.end('Error trying to calculate device pixel ratio');
+						res.status(501).end('Error trying to calculate device pixel ratio');
 					});
 			} else {
 				getPicture(body.url, body.options).then((value) => {
@@ -75,17 +75,17 @@ app.post('/imageFromUrl', function (req, res) {
 					res.end(value);
 				}).catch(function (error) {
 					console.log('Capture failed:', error);
-					res.end('Capture failed:' + error);
+					res.status(501).end('Capture failed:' + error);
 				});
 			}
 		}
 		catch(err) {
 			console.log('ERR:', err);
-			res.end('Server error');
+			res.status(501).end('Server error');
 		}
 	} else {
 		console.log('No URL. Exit');
-		res.end('No URL. Exit');
+		res.status(501).end('No URL. Exit');
 	}
 });
 
