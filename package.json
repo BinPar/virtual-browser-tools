@@ -4,9 +4,10 @@
   "description": "Virtual browser tools",
   "main": "app.js",
   "scripts": {
-    "start": "npm install;node app.js",
-    "kill": "kill $(ps aux | grep 'node app.js' | awk '{print $2}')",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm install;LOG=verbose PORT=3003 node app.js",
+    "kill": "kill -9 $(ps aux | grep 'node app.js' | awk '{print $2}')",
+    "testJPG": "cd test;curl -o output.jpg -X POST -H 'Content-Type: application/json' -d '{\"url\":\"http://www.medicapanamericana.com\",\"options\":{\"waitTimeout\":6000,\"screenshotOptions\":{\"width\":1000,\"height\":800}}}' http://localhost:3003/imageFromUrl;open output.jpg",
+    "testPDF": "cd test;curl -o output.pdf -X POST -H 'Content-Type: application/json' -d '{\"url\":\"http://www.binpar.com\",\"options\":{\"selector\":\".gm-style\", \"pdfOptions\": {\"marginsType\": 0,\"printBackground\": true,\"pageSize\":\"A3\",\"printSelectionOnly\": false,\"landscape\": true}}}' http://localhost:3003/PDFFromUrl;open output.pdf"
   },
   "author": "",
   "license": "ISC",
