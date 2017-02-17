@@ -42,8 +42,10 @@ var runNextAction = function () {
 	if(next) {
 		pendent = true;
 		next();
+	} else {
+		nightmare.goto('https://www.google.es').then(()=>{}).catch(()=>{});
 	}
-}
+};
 
 var getPicture = function(url, options) {
 	options = options || {};
