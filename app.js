@@ -33,7 +33,12 @@ var DEFAULT_SCREENSHOT_CLIP_OPTIONS = {
 };
 
 var pendent = false;
+var goToGoogleTimeout = null;
 var runNextAction = function () {
+	if(goToGoogleTimeout) {
+		clearTimeout(goToGoogleTimeout);
+		goToGoogleTimeout = null;
+	}
 	pendent = false;
 	if(logMode >= logOptions.verbose) {
 		console.log("running next action");
@@ -43,7 +48,15 @@ var runNextAction = function () {
 		pendent = true;
 		next();
 	} else {
-		nightmare.goto('https://www.google.es').then(()=>{}).catch(()=>{});
+		if(logMode >= logOptions.verbose) {
+			console.log("Go to google in 5 secs....");
+		}
+		goToGoogleTimeout = setTimeout(() => {
+			if(logMode >= logOptions.verbose) {
+				console.log("Going to Google NOW");
+			}
+			nightmare.goto('https://www.google.es').then(()=>{}).catch(()=>{});
+		}, 5000);
 	}
 };
 
