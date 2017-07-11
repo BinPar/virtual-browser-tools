@@ -28,7 +28,7 @@ done < "deploy.conf"
 
 if [ -z "$APP_NAME" ]
 then
-    printf "Nombre de aplicación no especificado, por favor use el archivo deploy.json [propiedad 'uid']\n"
+    printf "Nombre de aplicación no especificado, por favor use el archivo deploy.conf [propiedad 'uid']\n"
     echoUsage
     exit -1
 fi

@@ -1,5 +1,5 @@
 {
-  "name": "virtual-browser-tools",
+  "name": "@binpar/virtual-browser-tools",
   "version": "0.0.1",
   "description": "Virtual browser tools",
   "main": "app.js",
@@ -9,7 +9,7 @@
     "testJPG": "cd test;curl -o output.jpg -X POST -H 'Content-Type: application/json' -d '{\"url\":\"http://www.medicapanamericana.com\",\"options\":{\"waitTimeout\":1000,\"screenshotOptions\":{\"width\":1000,\"height\":800}}}' http://localhost:3003/imageFromUrl;open output.jpg",
     "testPDF": "cd test;curl -o output.pdf -X POST -H 'Content-Type: application/json' -d '{\"url\":\"http://www.binpar.com\",\"options\":{\"selector\":\".gm-style\", \"pdfOptions\": {\"marginsType\": 0,\"printBackground\": true,\"pageSize\":\"A3\",\"printSelectionOnly\": false,\"landscape\": true}}}' http://localhost:3003/PDFFromUrl;open output.pdf"
   },
-  "author": "",
+  "author": "BinPar Team S.L <soporte@binpar.com>",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
