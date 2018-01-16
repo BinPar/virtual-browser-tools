@@ -1,19 +1,20 @@
-var Nightmare = require('nightmare');
-var nightmare = Nightmare({ show: false });
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
+"use strict";
+const Nightmare = require('nightmare');
+const nightmare = Nightmare({ show: false });
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
 
-var reqQueue = [];
+const reqQueue = [];
 
-var logOptions = {
+const logOptions = {
 		noLog: 1,
 		errors: 2,
 		info: 3,
 		verbose: 4
 };
 
-var logMode = logOptions[process.env.LOG] || logOptions.info;
+const logMode = logOptions[process.env.LOG] || logOptions.info;
 
 if(logMode >= logOptions.noLog) {
 	console.log("Log mode:" + logMode);
@@ -24,17 +25,17 @@ nightmare.viewport(1920, 1080);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var devicePixelRatio = null;
-var DEFAULT_SCREENSHOT_CLIP_OPTIONS = {
+let devicePixelRatio = null;
+const DEFAULT_SCREENSHOT_CLIP_OPTIONS = {
 	x: 0,
 	y: 0,
 	width: 0,
 	height: 0
 };
 
-var pendent = false;
-var goToGoogleTimeout = null;
-var runNextAction = function () {
+let pendent = false;
+let goToGoogleTimeout = null;
+const runNextAction = function () {
 	if(goToGoogleTimeout) {
 		clearTimeout(goToGoogleTimeout);
 		goToGoogleTimeout = null;
@@ -43,7 +44,7 @@ var runNextAction = function () {
 	if(logMode >= logOptions.verbose) {
 		console.log("running next action");
 	}
-	var next = reqQueue.shift();
+	const next = reqQueue.shift();
 	if(next) {
 		pendent = true;
 		next();
@@ -60,9 +61,9 @@ var runNextAction = function () {
 	}
 };
 
-var getPicture = function(url, options) {
+const getPicture = function(url, options) {
 	options = options || {};
-	var res = nightmare.goto(url + '?v=' + new Date().getTime());
+	let res = nightmare.goto(url + '?v=' + new Date().getTime());
 	if(logMode >= logOptions.info) {
 		console.log('[getPicture] after goto');
 	}
@@ -96,9 +97,9 @@ var getPicture = function(url, options) {
 	return res.screenshot(null, options.screenshotOptions);
 };
 
-var getPDF = function(url, options) {
+const getPDF = function(url, options) {
 	options = options || {};
-	var res = nightmare.goto(url);
+	let res = nightmare.goto(url);
 	if(logMode >= logOptions.info) {
 		console.log('[getPDF] after goto');
 	}
@@ -117,7 +118,7 @@ var getPDF = function(url, options) {
 };
 
 app.post('/imageFromUrl', function (req, res) {
-	var body = req.body;
+	const body = req.body;
 	if(logMode >= logOptions.info) {
 		console.log('OPTIONS: ', body);
 	}
@@ -153,7 +154,7 @@ app.post('/imageFromUrl', function (req, res) {
 							});
 						})
 						.catch((err) => {
-							if(logMode >= logOptions.error) {
+							if(logMode >= logOptions.errors) {
 								console.log('ERR: ', err);
 							}
 							res.status(501).end('Error trying to calculate device pixel ratio');
@@ -196,7 +197,7 @@ app.post('/imageFromUrl', function (req, res) {
 
 
 app.post('/PDFFromUrl', function (req, res) {
-	var body = req.body;
+	const body = req.body;
 	if(logMode >= logOptions.info) {
 		console.log('OPTIONS: ', body);
 	}
@@ -235,7 +236,7 @@ app.post('/PDFFromUrl', function (req, res) {
 
 
 function normalizePort(val) {
-	var port = parseInt(val, 10);
+	const port = parseInt(val, 10);
 
 	if (isNaN(port)) {
 		// named pipe
@@ -250,12 +251,12 @@ function normalizePort(val) {
 	return false;
 }
 
-var port = normalizePort(process.env.PORT || '3003');
+let port = normalizePort(process.env.PORT || '3003');
 
 if(process.env.IS_PROD){
 	port = normalizePort('80');
 }
 console.log(port);
-var server = app.listen(port, function () {
+const server = app.listen(port, function () {
 	console.log('Example app listening on port ' + port)
 });
