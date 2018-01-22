@@ -14,7 +14,7 @@ const logOptions = {
 		verbose: 4
 };
 
-const logMode = logOptions[process.env.LOG] || logOptions.info;
+const logMode = logOptions[process.env.LOG] || logOptions.verbose;
 
 if(logMode >= logOptions.noLog) {
 	console.log("Log mode:" + logMode);
