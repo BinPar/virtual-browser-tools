@@ -37,7 +37,14 @@ class Puppeteer {
     return this.getNewBrowser();
   }
 
-  async newPageAndGotoAndWaitForOptions(url, viewport, userAgent, legacy, gotoOptions = {}) {
+  async newPageAndGotoAndWaitForOptions(
+    url,
+    viewport,
+    userAgent,
+    legacy,
+    selector,
+    gotoOptions = {},
+  ) {
     const browser = await this.getBrowser();
     log(LOG_OPTIONS.VERBOSE, '[Navigation & waiting] :: Creating NEW page...');
     const page = await browser.newPage();
@@ -64,17 +71,25 @@ class Puppeteer {
     }
     await page.goto(url, mergedGotoOptions);
     log(LOG_OPTIONS.VERBOSE, `[Navigation & waiting] :: We are in ${url} now`);
-    if (legacy.selector) {
+    if (selector || legacy.selector) {
       log(
         LOG_OPTIONS.INFO,
         `[Navigation & waiting] :: Waiting for selector ${legacy.selector} ...`,
       );
-      await page.waitForSelector(legacy.selector, DEFAULT_WAITING_FOR_SELECTOR_OPTIONS);
+      await page.waitForSelector(selector || legacy.selector, DEFAULT_WAITING_FOR_SELECTOR_OPTIONS);
     }
     return page;
   }
 
-  async getScreenshot({ url, screenshotOptions, viewport = {}, userAgent, legacy, gotoOptions }) {
+  async getScreenshot({
+    url,
+    screenshotOptions,
+    viewport = {},
+    userAgent,
+    legacy,
+    selector,
+    gotoOptions,
+  }) {
     try {
       log(
         LOG_OPTIONS.INFO,
@@ -90,6 +105,7 @@ class Puppeteer {
         viewport,
         userAgent,
         legacy,
+        selector,
         gotoOptions,
       );
       const options = {
@@ -132,7 +148,7 @@ class Puppeteer {
     }
   }
 
-  async getPDF({ url, pdfOptions, viewport = {}, userAgent, legacy, gotoOptions }) {
+  async getPDF({ url, pdfOptions, viewport = {}, userAgent, legacy, selector, gotoOptions }) {
     try {
       const { usePrint, ...options } = pdfOptions;
       log(LOG_OPTIONS.INFO, '[getPDF] :: OPTIONS: ', url, viewport, userAgent, legacy, pdfOptions);
@@ -141,6 +157,7 @@ class Puppeteer {
         viewport,
         userAgent,
         legacy,
+        selector,
         gotoOptions,
       );
       if (!usePrint) {

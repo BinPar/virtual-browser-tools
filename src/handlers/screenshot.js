@@ -3,7 +3,7 @@ import log, { LOG_OPTIONS } from '../tools/logger';
 import translateLegacyOptions from '../tools/translateLegacyOptions';
 
 export default async function screenshotHandler(req, res) {
-  const { url, viewport, userAgent, gotoOptions, ...options } = req.body || {};
+  const { url, viewport, userAgent, gotoOptions, selector, ...options } = req.body || {};
   log(LOG_OPTIONS.INFO, '[screenshotHandler] :: request options: ', req.body);
   if (url) {
     const { legacy, newOptions } = translateLegacyOptions(options);
@@ -13,6 +13,7 @@ export default async function screenshotHandler(req, res) {
       userAgent,
       gotoOptions,
       legacy,
+      selector,
       screenshotOptions: newOptions,
     });
     if (img) {
