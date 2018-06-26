@@ -1,0 +1,5 @@
+{
+  "pageTitle": "Test automatizados de las Virtual Browser Tools de BinPar",
+  "outputPath": "./.coverage/tests.html",
+  "includeFailureMsg": true
+}
