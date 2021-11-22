@@ -3,7 +3,11 @@ export default function translateLegacyOptions({
   ...newOptions
 }) {
   return {
-    legacy,
+    legacy: legacy || {
+      pdfOptions: {},
+      screenshotOptions: {},
+      gotoOptions: {},
+    },
     newOptions,
   };
 }

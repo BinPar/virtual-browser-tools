@@ -19,9 +19,10 @@ export default async function pdfHandler(req, res) {
     if (pdf) {
       log(LOG_OPTIONS.VERBOSE, '[pdfHandler] :: Sending PDF back');
       res.end(pdf);
+    } else {
+      log(LOG_OPTIONS.ERROR, '[pdfHandler] :: Error: No buffer returned');
+      res.status(501).end('No buffer returned');
     }
-    log(LOG_OPTIONS.ERROR, '[pdfHandler] :: Error: No buffer returned');
-    res.status(501).end('No buffer returned');
   } else {
     log(LOG_OPTIONS.WARNING, '[pdfHandler] :: No URL provided');
     res.status(501).end('No URL. Exit');

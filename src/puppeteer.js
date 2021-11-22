@@ -203,24 +203,28 @@ class Puppeteer {
         await page.emulateMedia('screen');
       }
       if (
-        legacy.pdfOptions.printBackground !== undefined ||
-        legacy.pdfOptions.printBackground !== null
+        legacy &&
+        legacy.pdfOptions &&
+        (legacy.pdfOptions.printBackground !== undefined ||
+          legacy.pdfOptions.printBackground !== null)
       ) {
         options.printBackground = legacy.pdfOptions.printBackground;
       }
       if (
-        legacy.pdfOptions.landscape !== undefined ||
-        legacy.pdfOptions.landscape !== null
+        legacy &&
+        legacy.pdfOptions &&
+        (legacy.pdfOptions.landscape !== undefined ||
+          legacy.pdfOptions.landscape !== null)
       ) {
         options.landscape = legacy.pdfOptions.landscape;
       }
-      if (legacy.pdfOptions.pageSize) {
+      if (legacy && legacy.pdfOptions && legacy.pdfOptions.pageSize) {
         options.format = legacy.pdfOptions.pageSize;
       }
-      if (legacy.pdfOptions.width) {
+      if (legacy && legacy.pdfOptions && legacy.pdfOptions.width) {
         options.width = legacy.pdfOptions.width;
       }
-      if (legacy.pdfOptions.height) {
+      if (legacy && legacy.pdfOptions && legacy.pdfOptions.height) {
         options.height = legacy.pdfOptions.height;
       }
       log(LOG_OPTIONS.VERBOSE, '[getPDF] :: Getting PDF');
