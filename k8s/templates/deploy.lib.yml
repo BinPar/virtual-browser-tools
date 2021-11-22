@@ -1,0 +1,71 @@
+#@ load("@ytt:data", "data")
+#@ load("utils.star", "utils")
+
+#@ def cpu(n):
+#@   return str(n)+"m"
+#@ end
+
+#@ def memory(n):
+#@   return "{}Mi".format(n)
+#@ end
+
+#@ def getPodSpec():
+metadata:
+  labels: #@ utils.defaultLabels("pod")
+spec:
+  #@ if/end data.values.resourceType != 'Deploy':
+  restartPolicy: Never
+  containers:
+    - image: #@ utils.imageName()
+      imagePullPolicy: Always
+      name: app
+      envFrom:
+        - configMapRef:
+            name: #@ utils.defaultConfigMapName()
+        #@ if data.values.additionalDeployEnvSources:
+        #@   for envSource in data.values.additionalDeployEnvSources:
+        - #@ utils.recursiveLookupForStringAndReplace(envSource, "##ENVIRONMENT", data.values.environment)
+        #@   end
+        #@ end
+      #@ if data.values.additionalDeployEnv:
+      env:
+        #@   for env in data.values.additionalDeployEnv:
+        - #@ utils.recursiveLookupForStringAndReplace(env, "##ENVIRONMENT", data.values.environment)
+        #@   end
+      #@ end
+      #@ if data.values.useHttp:
+      ports:
+        - containerPort: 80
+      readinessProbe:
+        httpGet:
+          path: #@ data.values.healthcheckPath
+          port: 80
+          scheme: HTTP
+        initialDelaySeconds: #@ data.values.initialDelaySeconds
+        failureThreshold: #@ data.values.failureThreshold
+        timeoutSeconds: #@ data.values.timeoutSeconds
+        periodSeconds: #@ data.values.periodSeconds
+      #@ end
+      resources:
+        requests:
+          memory: #@ memory(data.values.baseRAMRequest * data.values.releaseFactorRAMRequest) if utils.isRelease() else memory(data.values.baseRAMRequest)
+          cpu: #@ cpu(data.values.baseCPURequest * data.values.releaseFactorCPURequest) if utils.isRelease() else cpu(data.values.baseCPURequest)
+        limits:
+          memory: #@ memory(data.values.baseRAMLimit * data.values.releaseFactorRAMLimit) if utils.isRelease() else memory(data.values.baseRAMLimit)
+          cpu: #@ cpu(data.values.baseCPULimit * data.values.releaseFactorCPULimit) if utils.isRelease() else cpu(data.values.baseCPULimit)
+#@ end
+
+#@ def getDeploy():
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: #@ utils.deployName()
+  labels: #@ utils.defaultLabels("deploy")
+  namespace: #@ utils.namespaceName()
+spec:
+  replicas: #@ int(data.values.baseReplicas * data.values.releaseFactorReplicas) if utils.isRelease() else int(data.values.baseReplicas)
+  revisionHistoryLimit: #@ 4 if utils.isRelease() else 2
+  selector:
+    matchLabels: #@ utils.defaultLabels("pod")
+  template: #@ getPodSpec()
+#@ end

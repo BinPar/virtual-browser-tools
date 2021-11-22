@@ -1,0 +1,50 @@
+#@data/values-schema
+---
+rancherProjectName: ""
+projectName: ""
+resourceType: ""
+#@schema/nullable
+namespace: ""
+#@schema/nullable
+hasIngress: True
+#@schema/nullable
+useHttp: True
+defaultRootDomain: "binpar.cloud"
+productionDomain: ""
+environment: ""
+healthcheckPath: "/healthcheck"
+initialDelaySeconds: 4
+failureThreshold: 2
+timeoutSeconds: 5
+periodSeconds: 60
+baseReplicas: 2
+releaseFactorReplicas: 2
+baseRAMRequest: 64
+releaseFactorRAMRequest: 2
+baseRAMLimit: 256
+releaseFactorRAMLimit: 2
+baseCPURequest: 50
+releaseFactorCPURequest: 1
+baseCPULimit: 500
+releaseFactorCPULimit: 2
+#@schema/type any=True
+defaultConfig:
+#@schema/type any=True
+configMaps:
+#@schema/type any=True
+ingressAnnotations:
+#@schema/type any=True
+ingressRules:
+#@schema/type any=True
+ingressHosts:
+#@schema/type any=True
+additionalDeployEnv:
+#@schema/type any=True
+additionalDeployEnvSources:
+#@schema/type any=True
+issuerSolvers:
+schedule: ""
+#@schema/type any=True
+cronJobAdditionalConfig:
+#@schema/type any=True
+jobAdditionalConfig:

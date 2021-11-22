@@ -1,0 +1,10 @@
+#@data/values
+---
+rancherProjectName: "virtual-browser-tools"
+projectName: virtual-browser-tools
+resourceType: Deploy
+hasIngress: False
+useHttp: True
+baseRAMLimit: 512
+baseReplicas: 1
+releaseFactorReplicas: 2

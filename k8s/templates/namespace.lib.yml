@@ -1,0 +1,10 @@
+#@ load("@ytt:data", "data")
+#@ load("utils.star", "utils")
+
+#@ def getNamespace():
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: #@ utils.namespaceName()
+  labels: #@ utils.defaultLabels("namespace")
+#@ end

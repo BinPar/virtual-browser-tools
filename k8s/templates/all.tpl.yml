@@ -1,0 +1,27 @@
+#@ load("@ytt:data", "data")
+#@ load("namespace.lib.yml", "getNamespace")
+#@ load("deploy.lib.yml", "getDeploy")
+#@ load("job.lib.yml", "getJob")
+#@ load("cron-job.lib.yml", "getCronJob")
+#@ load("service.lib.yml", "getService")
+#@ load("ingress.lib.yml", "getIngress")
+#@ load("issuer.lib.yml", "getIssuer")
+#@ load("conf-map.lib.yml", "getDefaultConfigMap", "getValuesConfigMap")
+
+--- #@ getNamespace()
+#@ if data.values.hasIngress:
+--- #@ getIssuer()
+--- #@ getService()
+--- #@ getIngress()
+#@ end
+#@ if data.values.resourceType == "Deploy":
+--- #@ getDeploy()
+#@ elif data.values.resourceType == "Job":
+--- #@ getJob()
+#@ elif data.values.resourceType == "CronJob":
+--- #@ getCronJob()
+#@ end
+--- #@ getDefaultConfigMap()
+#@ configs = getValuesConfigMap()
+#@ for/end config in configs:
+--- #@ config

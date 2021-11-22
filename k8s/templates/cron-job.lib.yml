@@ -1,0 +1,21 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:template", "template")
+#@ load("utils.star", "utils")
+#@ load("job.lib.yml", "getJobSpec")
+
+#@ def getCronJob():
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: #@ utils.cronJobName()
+  labels: #@ utils.defaultLabels("cron-job")
+  namespace: #@ utils.namespaceName()
+spec:
+  schedule: #@ data.values.schedule
+  #@ if/end data.values.cronJobAdditionalConfig:
+  _: #@ template.replace(data.values.cronJobAdditionalConfig)
+  jobTemplate:
+    metadata:
+      labels: #@ utils.defaultLabels("job")
+    spec: #@ getJobSpec()
+#@ end

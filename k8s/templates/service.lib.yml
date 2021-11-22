@@ -1,0 +1,19 @@
+#@ load("@ytt:data", "data")
+#@ load("utils.star", "utils")
+
+#@ def getService():
+apiVersion: v1
+kind: Service
+metadata:
+  name: #@ utils.serviceName()
+  labels: #@ utils.defaultLabels("service")
+  namespace: #@ utils.namespaceName()
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector: #@ utils.defaultLabels("pod")
+  sessionAffinity: None
+  type: ClusterIP
+#@ end

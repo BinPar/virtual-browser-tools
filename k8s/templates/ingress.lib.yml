@@ -1,0 +1,43 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:template", "template")
+#@ load("utils.star", "utils")
+
+#@ def getIngress():
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    #@ if/end data.values.ingressAnnotations:
+    _: #@ template.replace(data.values.ingressAnnotations)
+  name: #@ utils.ingressName()
+  namespace: #@ utils.namespaceName()
+spec:
+  #@ if data.values.ingressRules:
+  rules: #@ utils.recursiveLookupForStringAndReplace(data.values.ingressRules, "##DEFAULT_SERVICE_NAME", utils.serviceName())
+  #@ else:
+  rules:
+    - host: #@ utils.defaultHostname()
+      http:
+        paths:
+          - backend:
+              serviceName: #@ utils.serviceName()
+              servicePort: 80
+            path: /(.*)
+            pathType: ImplementationSpecific
+  #@ end
+  tls:
+    - hosts:
+        #@ if data.values.ingressHosts:
+        #@ for/end host in data.values.ingressHosts:
+        - #@ host
+        #@ else:
+        - #@ utils.defaultHostname()
+        #@ end
+      secretName: #@ utils.certificateName()
+#@ end

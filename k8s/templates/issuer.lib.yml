@@ -1,0 +1,24 @@
+#@ load("@ytt:data", "data")
+#@ load("utils.star", "utils")
+
+#@ def getIssuer():
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+  namespace: #@ utils.namespaceName()
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: soporte@binpar.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    #@ if data.values.issuerSolvers:
+    solvers: #@ data.values.issuerSolvers
+    #@ else:
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+    #@ end
+#@ end
