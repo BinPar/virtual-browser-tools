@@ -25,7 +25,16 @@ const DEFAULT_WAITING_FOR_SELECTOR_OPTIONS = {
 class Puppeteer {
   async getNewBrowser() {
     log(LOG_OPTIONS.VERBOSE, 'Launching puppeteer...');
-    this.browser = await puppeteer.launch();
+    this.browser = await puppeteer.launch({
+      headless: true,
+      executablePath: process.env.CHROME_BIN || undefined,
+      args: [
+        '--no-sandbox',
+        '--headless',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+      ],
+    });
     log(LOG_OPTIONS.INFO, 'NEW browser created');
     return this.browser;
   }
@@ -53,11 +62,18 @@ class Puppeteer {
       ...DEFAULT_VIEWPORT,
       ...viewport,
     };
-    log(LOG_OPTIONS.INFO, '[Navigation & waiting] :: Setting viewport to: ', viewportOptions);
+    log(
+      LOG_OPTIONS.INFO,
+      '[Navigation & waiting] :: Setting viewport to: ',
+      viewportOptions,
+    );
     await page.setViewport(viewportOptions);
     log(LOG_OPTIONS.VERBOSE, '[Navigation & waiting] :: Viewport changed');
     if (userAgent) {
-      log(LOG_OPTIONS.INFO, `[Navigation & waiting] :: User Agent ${userAgent}`);
+      log(
+        LOG_OPTIONS.INFO,
+        `[Navigation & waiting] :: User Agent ${userAgent}`,
+      );
       await page.setUserAgent(userAgent);
     }
     log(LOG_OPTIONS.VERBOSE, `[Navigation & waiting] :: Going to ${url} ...`);
@@ -76,7 +92,10 @@ class Puppeteer {
         LOG_OPTIONS.INFO,
         `[Navigation & waiting] :: Waiting for selector ${legacy.selector} ...`,
       );
-      await page.waitForSelector(selector || legacy.selector, DEFAULT_WAITING_FOR_SELECTOR_OPTIONS);
+      await page.waitForSelector(
+        selector || legacy.selector,
+        DEFAULT_WAITING_FOR_SELECTOR_OPTIONS,
+      );
     }
     return page;
   }
@@ -148,10 +167,26 @@ class Puppeteer {
     }
   }
 
-  async getPDF({ url, pdfOptions, viewport = {}, userAgent, legacy, selector, gotoOptions }) {
+  async getPDF({
+    url,
+    pdfOptions,
+    viewport = {},
+    userAgent,
+    legacy,
+    selector,
+    gotoOptions,
+  }) {
     try {
       const { usePrint, ...options } = pdfOptions;
-      log(LOG_OPTIONS.INFO, '[getPDF] :: OPTIONS: ', url, viewport, userAgent, legacy, pdfOptions);
+      log(
+        LOG_OPTIONS.INFO,
+        '[getPDF] :: OPTIONS: ',
+        url,
+        viewport,
+        userAgent,
+        legacy,
+        pdfOptions,
+      );
       const page = await this.newPageAndGotoAndWaitForOptions(
         url,
         viewport,
@@ -161,7 +196,10 @@ class Puppeteer {
         gotoOptions,
       );
       if (!usePrint) {
-        log(LOG_OPTIONS.VERBOSE, '[getPDF] :: Using "screen" type for render ...');
+        log(
+          LOG_OPTIONS.VERBOSE,
+          '[getPDF] :: Using "screen" type for render ...',
+        );
         await page.emulateMedia('screen');
       }
       if (
@@ -170,7 +208,10 @@ class Puppeteer {
       ) {
         options.printBackground = legacy.pdfOptions.printBackground;
       }
-      if (legacy.pdfOptions.landscape !== undefined || legacy.pdfOptions.landscape !== null) {
+      if (
+        legacy.pdfOptions.landscape !== undefined ||
+        legacy.pdfOptions.landscape !== null
+      ) {
         options.landscape = legacy.pdfOptions.landscape;
       }
       if (legacy.pdfOptions.pageSize) {
