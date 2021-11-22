@@ -11,8 +11,10 @@
 --- #@ getNamespace()
 #@ if data.values.hasIngress:
 --- #@ getIssuer()
---- #@ getService()
 --- #@ getIngress()
+#@ end
+#@ if data.values.useHttp:
+--- #@ getService()
 #@ end
 #@ if data.values.resourceType == "Deploy":
 --- #@ getDeploy()

@@ -1,7 +1,13 @@
 # -- Base Node ---
 FROM node:14-alpine AS base
-RUN apk add --update  --no-cache libstdc++
-RUN apk add --update --no-cache \
+
+ENV CHROME_BIN="/usr/bin/chromium-browser" \
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
+RUN set -x \
+  && apk update \
+  && apk upgrade \
+  && apk add --no-cache \
+  libstdc++ \
   binutils-gold \
   curl \
   g++ \
@@ -11,7 +17,12 @@ RUN apk add --update --no-cache \
   linux-headers \
   make \
   python3 \
+  udev \
+  ttf-freefont \
+  openssl \
+  chromium \
   && ln -sf python3 /usr/bin/python
+
 WORKDIR /usr/src/app
 COPY package*.json ./
 

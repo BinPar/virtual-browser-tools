@@ -7,6 +7,27 @@ metadata:
     app.kubernetes.io/instance: namespace
     app.kubernetes.io/environment: release
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-virtual-browser-tools
+  labels:
+    app.kubernetes.io/name: virtual-browser-tools
+    app.kubernetes.io/instance: service
+    app.kubernetes.io/environment: release
+  namespace: virtual-browser-tools-release
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app.kubernetes.io/name: virtual-browser-tools
+    app.kubernetes.io/instance: pod
+    app.kubernetes.io/environment: release
+  sessionAffinity: None
+  type: ClusterIP
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
