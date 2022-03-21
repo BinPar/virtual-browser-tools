@@ -1,6 +1,6 @@
 {
   "name": "@binpar/virtual-browser-tools",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "Virtual browser tools",
   "main": "src/index.js",
   "author": "BinPar Team S.L.<soporte@binpar.com>",

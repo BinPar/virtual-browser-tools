@@ -9,8 +9,4 @@ fi
 echo "Building version: $VERSION"
 TAG="$VERSION"
 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 402083338966.dkr.ecr.eu-west-1.amazonaws.com
-docker build -t virtual-browser-tools .
-docker tag virtual-browser-tools "$DOCKER_REGISTRY:$TAG"
-docker tag virtual-browser-tools "$DOCKER_REGISTRY:release"
-docker push "$DOCKER_REGISTRY:$TAG"
-docker push "$DOCKER_REGISTRY:release"
+docker buildx build --platform linux/arm64 -t "$DOCKER_REGISTRY:$TAG" -t "$DOCKER_REGISTRY:release-arm" --push .
